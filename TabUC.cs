@@ -10,9 +10,11 @@ namespace Browser
 {
     public partial class TabUC : UserControl
     {
+        private CoreWebView2 WebBrowserCore;
         private readonly BrowserForm form;
         private readonly TabPage tabPage;
         private readonly string referrer;
+        private bool pageLoadComplete;
 
         public TabUC(BrowserForm form, TabPage tabPage, string url = "", string referrer = "")
         {
@@ -23,6 +25,7 @@ namespace Browser
             this.referrer = referrer;
             Navigate(url);
             txtUrl.AutoCompleteCustomSource = Data.history;
+            WebBrowserCore = WebBrowser.CoreWebView2;
         }
 
         private void WebBrowser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -32,11 +35,20 @@ namespace Browser
             txtUrl.Text = stringUri;
             if (stringUri.StartsWith(Constants.HTTPS))
             {
+                //WebBrowserCore.
             }
             else
             {
-                MessageBox.Show("Essa página não usa HTTPS.", "Segurança", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Essa página não usa HTTPS.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            btnRefresh.BackgroundImage = imgsLoading.Images["Redo"];
+            pageLoadComplete = true;
+        }
+
+        private void WebBrowser_ContentLoading(object sender, CoreWebView2ContentLoadingEventArgs e)
+        {
+            pageLoadComplete = false;
+            btnRefresh.BackgroundImage = imgsLoading.Images["XMark"];
         }
 
         private void TxtUrl_KeyDown(object sender, KeyEventArgs e)
@@ -50,17 +62,24 @@ namespace Browser
 
         private void BtnPrevious_Click(object sender, EventArgs e)
         {
-            WebBrowser.GoBack();
+            WebBrowserCore.GoBack();
         }
 
         private void BtnForward_Click(object sender, EventArgs e)
         {
-            WebBrowser.GoForward();
+            WebBrowserCore.GoForward();
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            WebBrowser.Refresh();
+            if (pageLoadComplete)
+            {
+                WebBrowserCore.Reload();
+            }
+            else
+            {
+                WebBrowserCore.Stop();
+            }
         }
 
         private void BtnHome_Click(object sender, EventArgs e)
@@ -73,7 +92,7 @@ namespace Browser
             MessageBox.Show("Not implemented yet.", "Settings", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
         }
 
-        private void Navigate(string url)
+        public void Navigate(string url = "")
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -132,9 +151,9 @@ namespace Browser
             e.Handled = true;
         }
 
-        private void panelUrl_Paint(object sender, PaintEventArgs e)
+        private void WebBrowser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
-
+            MessageBox.Show(e.WebMessageAsJson);
         }
     }
 }

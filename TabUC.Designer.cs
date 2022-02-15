@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabUC));
             this.tableMain = new System.Windows.Forms.TableLayoutPanel();
             this.tableControls = new System.Windows.Forms.TableLayoutPanel();
@@ -41,6 +42,9 @@
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnWebsiteConfig = new System.Windows.Forms.Button();
             this.WebBrowser = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.imgsFavorites = new System.Windows.Forms.ImageList(this.components);
+            this.imgsPageSettings = new System.Windows.Forms.ImageList(this.components);
+            this.imgsLoading = new System.Windows.Forms.ImageList(this.components);
             this.tableMain.SuspendLayout();
             this.tableControls.SuspendLayout();
             this.tableUrl.SuspendLayout();
@@ -207,6 +211,8 @@
             // 
             // btnWebsiteConfig
             // 
+            this.btnWebsiteConfig.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnWebsiteConfig.BackgroundImage")));
+            this.btnWebsiteConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnWebsiteConfig.FlatAppearance.BorderSize = 0;
             this.btnWebsiteConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWebsiteConfig.Location = new System.Drawing.Point(619, 3);
@@ -227,6 +233,30 @@
             this.WebBrowser.TabIndex = 0;
             this.WebBrowser.ZoomFactor = 1D;
             this.WebBrowser.NavigationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs>(this.WebBrowser_NavigationCompleted);
+            this.WebBrowser.WebMessageReceived += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs>(this.WebBrowser_WebMessageReceived);
+            this.WebBrowser.ContentLoading += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2ContentLoadingEventArgs>(this.WebBrowser_ContentLoading);
+            // 
+            // imgsFavorites
+            // 
+            this.imgsFavorites.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgsFavorites.ImageStream")));
+            this.imgsFavorites.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgsFavorites.Images.SetKeyName(0, "StarRegular");
+            this.imgsFavorites.Images.SetKeyName(1, "StarSolid");
+            // 
+            // imgsPageSettings
+            // 
+            this.imgsPageSettings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgsPageSettings.ImageStream")));
+            this.imgsPageSettings.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgsPageSettings.Images.SetKeyName(0, "Exclamation");
+            this.imgsPageSettings.Images.SetKeyName(1, "Lock");
+            this.imgsPageSettings.Images.SetKeyName(2, "MagGlass");
+            // 
+            // imgsLoading
+            // 
+            this.imgsLoading.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgsLoading.ImageStream")));
+            this.imgsLoading.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgsLoading.Images.SetKeyName(0, "Redo");
+            this.imgsLoading.Images.SetKeyName(1, "XMark");
             // 
             // TabUC
             // 
@@ -254,10 +284,13 @@
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnPrevious;
-        private Microsoft.Web.WebView2.WinForms.WebView2 WebBrowser;
         private System.Windows.Forms.TableLayoutPanel tableUrl;
         private System.Windows.Forms.Button btnWebsiteConfig;
         private System.Windows.Forms.TextBox txtUrl;
         private System.Windows.Forms.Button btnPageSettings;
+        public Microsoft.Web.WebView2.WinForms.WebView2 WebBrowser;
+        private System.Windows.Forms.ImageList imgsFavorites;
+        private System.Windows.Forms.ImageList imgsPageSettings;
+        private System.Windows.Forms.ImageList imgsLoading;
     }
 }

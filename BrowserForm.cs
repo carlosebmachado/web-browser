@@ -17,15 +17,14 @@ namespace Browser
 
         private void TabControl_MouseClick(object sender, MouseEventArgs e)
         {
-            if (tabControl.TabPages.Count <= 2) return;
             if (e.Button == MouseButtons.Left)
             {
                 var tabRect = tabControl.GetTabRect(tabControl.SelectedIndex);
-                if (e.X > tabRect.Right - 20 &&
-                    e.X < tabRect.Right)
+                if (e.X > tabRect.Right - 20 && e.X < tabRect.Right)
                 {
-                    if (tabControl.SelectedTab.Name.Equals("tabNew")) return;
-                    tabControl.TabPages.Remove(tabControl.SelectedTab);
+                    if (IsOpenTab()) return;
+                    if (tabControl.SelectedTab.ContainsFocus) return;
+                    CheckLastAndCloseTab();
                     return;
                 }
             }
@@ -35,11 +34,30 @@ namespace Browser
                 {
                     if (tabControl.GetTabRect(i).Contains(e.Location))
                     {
-                        if (tabControl.TabPages[i].Name.Equals("tabNew")) return;
-                        tabControl.TabPages.RemoveAt(i);
+                        if (IsOpenTab()) return;
+                        tabControl.SelectedTab = tabControl.TabPages[i];
+                        CheckLastAndCloseTab();
                         return;
                     }
                 }
+            }
+        }
+
+        private bool IsOpenTab()
+        {
+            return tabControl.SelectedTab.Name.Equals("tabNew");
+        }
+
+        private void CheckLastAndCloseTab()
+        {
+            if (tabControl.SelectedIndex == 0 && tabControl.TabCount <= 2)
+            {
+                //((TabUC)tabControl.SelectedTab.Controls[0]).Navigate();
+                Close();
+            }
+            else
+            {
+                tabControl.TabPages.Remove(tabControl.SelectedTab);
             }
         }
 
@@ -54,9 +72,26 @@ namespace Browser
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            HandleNewTabClick();
+        }
+
+        private void HandleNewTabClick()
+        {
             if (tabControl.SelectedTab == null) return;
             if (!tabControl.SelectedTab.Name.Equals("tabNew")) return;
             NewTab();
+        }
+
+        private void BrowserForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (tabControl.TabPages.Count >= 3)
+            {
+                var dr = MessageBox.Show("Do you want to close all tabs?", "Quit Browser", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
         }
     }
 }
