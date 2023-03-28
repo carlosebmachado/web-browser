@@ -1,9 +1,6 @@
 ﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections;
-using System.Drawing;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Browser
@@ -26,11 +23,14 @@ namespace Browser
             Navigate(url);
             txtUrl.AutoCompleteCustomSource = Data.history;
             WebBrowserCore = WebBrowser.CoreWebView2;
+            btnPrevious.Enabled = false;
+            btnForward.Enabled = false;
+            SetTabTitle("New Tab");
         }
 
         private void WebBrowser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            tabPage.Text = WebBrowser.CoreWebView2.DocumentTitle + "   ✕";
+            SetTabTitle(WebBrowser.CoreWebView2.DocumentTitle);
             var stringUri = WebBrowser.Source.ToString();
             txtUrl.Text = stringUri;
             if (stringUri.StartsWith(Constants.HTTPS))
@@ -62,12 +62,33 @@ namespace Browser
 
         private void BtnPrevious_Click(object sender, EventArgs e)
         {
-            WebBrowserCore.GoBack();
+            if (WebBrowserCore.CanGoBack)
+            {
+                WebBrowserCore.GoBack();
+            }
+            SetCanGoBackBtn();
+            SetCanGoForwardBtn();
         }
 
         private void BtnForward_Click(object sender, EventArgs e)
         {
-            WebBrowserCore.GoForward();
+            if (WebBrowserCore == null) return;
+            if (WebBrowserCore.CanGoForward)
+            { 
+                WebBrowserCore.GoForward(); 
+            }
+        }
+
+        private void SetCanGoBackBtn()
+        {
+            if (WebBrowserCore == null) return;
+            btnPrevious.Enabled = WebBrowserCore.CanGoBack;
+        }
+
+        private void SetCanGoForwardBtn()
+        {
+            if (WebBrowserCore == null) return;
+            btnPrevious.Enabled = WebBrowserCore.CanGoForward;
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
@@ -154,6 +175,19 @@ namespace Browser
         private void WebBrowser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             MessageBox.Show(e.WebMessageAsJson);
+        }
+
+        private void SetTabTitle(string title)
+        {
+            if (tabPage == null) return;
+            var tabTitle = title;
+            if (tabTitle.Length > 20)
+            {
+                tabTitle = tabTitle.Substring(0, 20) + " ...";
+            }
+            tabTitle += "   ✕";
+            tabPage.Text = tabTitle;
+            tabPage.ToolTipText = title;
         }
     }
 }

@@ -43,7 +43,7 @@
             this.tabControl.Name = "tabControl";
             this.tabControl.Padding = new System.Drawing.Point(0, 0);
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1280, 720);
+            this.tabControl.Size = new System.Drawing.Size(784, 411);
             this.tabControl.TabIndex = 9;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
             this.tabControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TabControl_MouseClick);
@@ -54,7 +54,7 @@
             this.tabNew.Location = new System.Drawing.Point(4, 22);
             this.tabNew.Name = "tabNew";
             this.tabNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.tabNew.Size = new System.Drawing.Size(1272, 694);
+            this.tabNew.Size = new System.Drawing.Size(776, 385);
             this.tabNew.TabIndex = 1;
             this.tabNew.Text = "   ➕";
             // 
@@ -62,11 +62,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1280, 720);
+            this.ClientSize = new System.Drawing.Size(784, 411);
             this.Controls.Add(this.tabControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.MinimumSize = new System.Drawing.Size(360, 39);
+            this.MinimumSize = new System.Drawing.Size(360, 260);
             this.Name = "BrowserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Browser";
