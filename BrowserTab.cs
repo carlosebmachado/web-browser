@@ -24,7 +24,7 @@ namespace Browser
         {
             InitializeComponent();
 
-            Navigate(Settings.HomePageURL);
+            Navigate(Settings.data[Settings.KEY_HOME_PAGE_URL]);
         }
 
         private void WebBrowser_LoadCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -58,7 +58,7 @@ namespace Browser
 
         private void BtnHome_Click(object sender, EventArgs e)
         {
-            Navigate(Settings.HomePageURL);
+            Navigate(Settings.data[Settings.KEY_HOME_PAGE_URL]);
         }
 
         private void BtnSettings_Click(object sender, EventArgs e)

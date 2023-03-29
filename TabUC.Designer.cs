@@ -184,6 +184,7 @@
             // 
             this.btnPageSettings.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPageSettings.BackgroundImage")));
             this.btnPageSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnPageSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnPageSettings.FlatAppearance.BorderSize = 0;
             this.btnPageSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPageSettings.Location = new System.Drawing.Point(3, 3);
@@ -213,6 +214,7 @@
             // 
             this.btnWebsiteConfig.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnWebsiteConfig.BackgroundImage")));
             this.btnWebsiteConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnWebsiteConfig.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnWebsiteConfig.FlatAppearance.BorderSize = 0;
             this.btnWebsiteConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWebsiteConfig.Location = new System.Drawing.Point(619, 3);

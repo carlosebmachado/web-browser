@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
 using Microsoft.Web.WebView2.Core;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Browser
@@ -21,11 +22,16 @@ namespace Browser
             this.form = form;
             this.referrer = referrer;
             Navigate(url);
-            txtUrl.AutoCompleteCustomSource = Data.history;
-            WebBrowserCore = WebBrowser.CoreWebView2;
+            txtUrl.AutoCompleteCustomSource = History.data;
+            SetWebBrowserCore();
             btnPrevious.Enabled = false;
             btnForward.Enabled = false;
             SetTabTitle("New Tab");
+        }
+
+        private void SetWebBrowserCore()
+        {
+            WebBrowserCore = WebBrowser.CoreWebView2;
         }
 
         private void WebBrowser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -35,7 +41,7 @@ namespace Browser
             txtUrl.Text = stringUri;
             if (stringUri.StartsWith(Constants.HTTPS))
             {
-                //WebBrowserCore.
+
             }
             else
             {
@@ -62,6 +68,11 @@ namespace Browser
 
         private void BtnPrevious_Click(object sender, EventArgs e)
         {
+            if (WebBrowserCore == null)
+            {
+                SetWebBrowserCore();
+            }
+
             if (WebBrowserCore.CanGoBack)
             {
                 WebBrowserCore.GoBack();
@@ -72,7 +83,11 @@ namespace Browser
 
         private void BtnForward_Click(object sender, EventArgs e)
         {
-            if (WebBrowserCore == null) return;
+            if (WebBrowserCore == null)
+            {
+                SetWebBrowserCore();
+            }
+
             if (WebBrowserCore.CanGoForward)
             { 
                 WebBrowserCore.GoForward(); 
@@ -81,18 +96,31 @@ namespace Browser
 
         private void SetCanGoBackBtn()
         {
-            if (WebBrowserCore == null) return;
+            if (WebBrowserCore == null)
+            {
+                SetWebBrowserCore();
+            }
+
             btnPrevious.Enabled = WebBrowserCore.CanGoBack;
         }
 
         private void SetCanGoForwardBtn()
         {
-            if (WebBrowserCore == null) return;
+            if (WebBrowserCore == null)
+            {
+                SetWebBrowserCore();
+            }
+
             btnPrevious.Enabled = WebBrowserCore.CanGoForward;
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            if (WebBrowserCore == null)
+            {
+                SetWebBrowserCore();
+            }
+
             if (pageLoadComplete)
             {
                 WebBrowserCore.Reload();
@@ -105,19 +133,19 @@ namespace Browser
 
         private void BtnHome_Click(object sender, EventArgs e)
         {
-            Navigate(string.IsNullOrEmpty(referrer) ? Settings.HomePageURL : referrer);
+            Navigate(string.IsNullOrEmpty(referrer) ? Settings.data[Settings.KEY_HOME_PAGE_URL] : referrer);
         }
 
         private void BtnSettings_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet.", "Settings", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+            new SettingsForm().ShowDialog();
         }
 
         public void Navigate(string url = "")
         {
             if (string.IsNullOrEmpty(url))
             {
-                url = Constants.HTTPS + Settings.HomePageURL;
+                url = Constants.HTTPS + Settings.data[Settings.KEY_HOME_PAGE_URL];
             }
             else
             {
@@ -126,10 +154,12 @@ namespace Browser
                     if (Util.IsURI(url) || Util.IsIP(url))
                     {
                         url = Constants.HTTPS + url;
+                        History.Save(url);
                     }
                     else
                     {
-                        url = Constants.HTTPS + Settings.SearchEngineURL + url;
+                        History.Save(url);
+                        url = Constants.HTTPS + Settings.data[Settings.KEY_SEARCH_ENGINE_URL] + url;
                     }
                 }
                 else if (url.Length <= Constants.HTTPS.Length)
@@ -137,7 +167,6 @@ namespace Browser
                     return;
                 }
             }
-            Data.history.Add(url);
             txtUrl.Text = url;
             WebBrowser.Source = new Uri(url);
         }
