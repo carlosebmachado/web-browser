@@ -60,9 +60,6 @@
     <Compile Include="BrowserForm.Designer.cs">
       <DependentUpon>BrowserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BrowserTab.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Data\History.cs" />
     <Compile Include="Data\Data.cs" />
@@ -84,9 +81,6 @@
     <Compile Include="Util.cs" />
     <EmbeddedResource Include="BrowserForm.resx">
       <DependentUpon>BrowserForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BrowserTab.resx">
-      <DependentUpon>BrowserTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
