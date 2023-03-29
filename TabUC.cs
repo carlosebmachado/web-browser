@@ -23,20 +23,25 @@ namespace Browser
             this.referrer = referrer;
             Navigate(url);
             txtUrl.AutoCompleteCustomSource = History.data;
-            SetWebBrowserCore();
-            btnPrevious.Enabled = false;
-            btnForward.Enabled = false;
             SetTabTitle("New Tab");
+
+            WebBrowser.WebMessageReceived += WebBrowser_WebMessageReceived;
         }
 
         private void SetWebBrowserCore()
         {
-            WebBrowserCore = WebBrowser.CoreWebView2;
+            if (WebBrowserCore == null)
+            {
+                WebBrowserCore = WebBrowser.CoreWebView2;
+            }
         }
 
         private void WebBrowser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            SetTabTitle(WebBrowser.CoreWebView2.DocumentTitle);
+            SetWebBrowserCore();
+            WebBrowserCore.NewWindowRequested += WebBrowserCore_NewWindowRequested;
+            SetTabTitle(WebBrowserCore.DocumentTitle);
+            
             var stringUri = WebBrowser.Source.ToString();
             txtUrl.Text = stringUri;
             if (stringUri.StartsWith(Constants.HTTPS))
@@ -49,6 +54,8 @@ namespace Browser
             }
             btnRefresh.BackgroundImage = imgsLoading.Images["Redo"];
             pageLoadComplete = true;
+            SetCanGoBackBtn();
+            SetCanGoForwardBtn();
         }
 
         private void WebBrowser_ContentLoading(object sender, CoreWebView2ContentLoadingEventArgs e)
@@ -68,59 +75,32 @@ namespace Browser
 
         private void BtnPrevious_Click(object sender, EventArgs e)
         {
-            if (WebBrowserCore == null)
+            if (WebBrowser.CanGoBack)
             {
-                SetWebBrowserCore();
+                WebBrowser.GoBack();
             }
-
-            if (WebBrowserCore.CanGoBack)
-            {
-                WebBrowserCore.GoBack();
-            }
-            SetCanGoBackBtn();
-            SetCanGoForwardBtn();
         }
 
         private void BtnForward_Click(object sender, EventArgs e)
         {
-            if (WebBrowserCore == null)
+            if (WebBrowser.CanGoForward)
             {
-                SetWebBrowserCore();
-            }
-
-            if (WebBrowserCore.CanGoForward)
-            { 
-                WebBrowserCore.GoForward(); 
+                WebBrowser.GoForward();
             }
         }
 
         private void SetCanGoBackBtn()
         {
-            if (WebBrowserCore == null)
-            {
-                SetWebBrowserCore();
-            }
-
-            btnPrevious.Enabled = WebBrowserCore.CanGoBack;
+            btnPrevious.Enabled = WebBrowser.CanGoBack;
         }
 
         private void SetCanGoForwardBtn()
         {
-            if (WebBrowserCore == null)
-            {
-                SetWebBrowserCore();
-            }
-
-            btnPrevious.Enabled = WebBrowserCore.CanGoForward;
+            btnForward.Enabled = WebBrowser.CanGoForward;
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            if (WebBrowserCore == null)
-            {
-                SetWebBrowserCore();
-            }
-
             if (pageLoadComplete)
             {
                 WebBrowserCore.Reload();
@@ -195,9 +175,9 @@ namespace Browser
             txtUrl.HideSelection = true;
         }
 
-        private void WebBrowser_NewWindowRequested(object sender, WebViewControlNewWindowRequestedEventArgs e)
+        private void WebBrowserCore_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
         {
-            form.NewTab(e.Uri.ToString(), e.Referrer.ToString());
+            form.NewTab(e.Uri.ToString(), "");
             e.Handled = true;
         }
 

@@ -54,6 +54,7 @@
             this.Setting,
             this.Value});
             this.dgvSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvSettings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dgvSettings.GridColor = System.Drawing.SystemColors.Control;
             this.dgvSettings.Location = new System.Drawing.Point(3, 3);
             this.dgvSettings.MultiSelect = false;
@@ -131,6 +132,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SettingsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSettings)).EndInit();
