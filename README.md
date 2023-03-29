@@ -10,9 +10,9 @@ This is a simple web browser application built using C# and Windows Forms. The w
 - Navigation history functionality to save visited websites
 
 ## How to Use
-- Enter a URL into the address bar and press Enter to navigate to the webpage
-- Use the navigation buttons to go back, forward, or reload the current page
-- Use the tabs to browse multiple webpages at once
+1. Enter a URL into the address bar and press Enter to navigate to the webpage
+1. Use the navigation buttons to go back, forward, or reload the current page
+1. Use the tabs to browse multiple webpages at once
 
 ## Technologies Used
 - C#
